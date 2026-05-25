@@ -32,7 +32,9 @@
   "homepage": "https://github.com/xolosArmy/tonalli-core#readme",
   "devDependencies": {
     "@types/node": "^24.0.0",
+    "chronik-client": "^4.3.0",
     "tsup": "^8.0.0",
+    "tsx": "^4.22.3",
     "typescript": "^5.0.0",
     "vitest": "^3.0.0"
   }
