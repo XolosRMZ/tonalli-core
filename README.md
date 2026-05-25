@@ -16,34 +16,40 @@ Culture is the network.
 The goal is not to fork eCash.  
 The goal is to build independent, open, verifiable infrastructure around eCash.
 
-## v0.1 Scope
+## Features
 
-The first release focuses on CashAddr safety:
-
+### 1. CashAddr Safety
 - Validate `ecash:` address prefix
 - Reject ambiguous addresses
 - Detect mixed-case CashAddr errors
 - Normalize addresses
-- Detect mainnet/testnet/unknown address prefixes
-- Prepare the foundation for RMZ access-key detection
+
+### 2. RMZ Access Key (Sovereign Adapter Pattern)
+- Detect RMZ token balances seamlessly
+- `hasRMZAccess(address, adapter)` primitive for community gating
+- Infrastructure-agnostic (bring your own Chronik/Indexer adapter)
 
 ## Usage
 
 ```ts
 import {
   isValidEcashAddress,
-  normalizeEcashAddress,
-  requireEcashPrefix,
-  detectAddressNetwork
+  hasRMZAccess,
+  type BlockchainAdapter
 } from "@xolosarmy/tonalli-core";
 
+// 1. Validate Address
 const address = "ecash:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz";
+if (!isValidEcashAddress(address)) throw new Error("Invalid address");
 
-if (isValidEcashAddress(address)) {
-  console.log("Valid eCash address");
-}
+// 2. Bring your own adapter (e.g., Chronik)
+const myAdapter: BlockchainAdapter = {
+  async getTokenBalance(address, tokenId) {
+    // Fetch from your preferred indexer
+    return { tokenId, amount: "100" }; 
+  }
+};
 
-const normalized = normalizeEcashAddress(address);
-const network = detectAddressNetwork(address);
-
-console.log({ normalized, network });
+// 3. Verify Cultural Access
+const hasAccess = await hasRMZAccess(address, myAdapter);
+console.log(hasAccess ? "Welcome to xolosArmy" : "Access Denied");
