@@ -1,0 +1,39 @@
+{
+  "name": "@xolosarmy/tonalli-core",
+  "version": "0.1.0",
+  "description": "Sovereign eCash infrastructure primitives for xolosArmy Network.",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "test": "vitest run",
+    "dev": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xolosArmy/tonalli-core.git"
+  },
+  "keywords": [
+    "ecash",
+    "xec",
+    "xolosarmy",
+    "tonalli",
+    "rmz",
+    "cashaddr"
+  ],
+  "author": "xolosArmy Network",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xolosArmy/tonalli-core/issues"
+  },
+  "homepage": "https://github.com/xolosArmy/tonalli-core#readme",
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}
