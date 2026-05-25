@@ -1,3 +1,4 @@
+
 # @xolosarmy/tonalli-core
 
 Sovereign eCash infrastructure primitives for xolosArmy Network.
@@ -22,3 +23,27 @@ The first release focuses on CashAddr safety:
 - Validate `ecash:` address prefix
 - Reject ambiguous addresses
 - Detect mixed-case CashAddr errors
+- Normalize addresses
+- Detect mainnet/testnet/unknown address prefixes
+- Prepare the foundation for RMZ access-key detection
+
+## Usage
+
+```ts
+import {
+  isValidEcashAddress,
+  normalizeEcashAddress,
+  requireEcashPrefix,
+  detectAddressNetwork
+} from "@xolosarmy/tonalli-core";
+
+const address = "ecash:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz";
+
+if (isValidEcashAddress(address)) {
+  console.log("Valid eCash address");
+}
+
+const normalized = normalizeEcashAddress(address);
+const network = detectAddressNetwork(address);
+
+console.log({ normalized, network });
