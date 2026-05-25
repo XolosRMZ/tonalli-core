@@ -1,4 +1,3 @@
-
 # @xolosarmy/tonalli-core
 
 Sovereign eCash infrastructure primitives for xolosArmy Network.
@@ -22,6 +21,7 @@ The goal is to build independent, open, verifiable infrastructure around eCash.
 - Validate `ecash:` address prefix
 - Reject ambiguous addresses
 - Detect mixed-case CashAddr errors
+- Validate CashAddr checksum with Polymod
 - Normalize addresses
 
 ### 2. RMZ Access Key (Sovereign Adapter Pattern)
@@ -39,22 +39,23 @@ import {
 } from "@xolosarmy/tonalli-core";
 
 // 1. Validate Address
-const address = "ecash:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz";
+const address = "ecash:qzh3lwn68jtn94e8pf059rslfssyrjjyaykjwr0z2a";
 if (!isValidEcashAddress(address)) throw new Error("Invalid address");
 
 // 2. Bring your own adapter (e.g., Chronik)
 const myAdapter: BlockchainAdapter = {
   async getTokenBalance(address, tokenId) {
     // Fetch from your preferred indexer
-    return { tokenId, amount: "100" }; 
+    return { tokenId, amount: "100" };
   }
 };
 
 // 3. Verify Cultural Access
 const hasAccess = await hasRMZAccess(address, myAdapter);
 console.log(hasAccess ? "Welcome to xolosArmy" : "Access Denied");
+```
 
-Long-term vision
+## Long-term vision
 
 The node is the final tree.
 The sovereign stack is the forest.

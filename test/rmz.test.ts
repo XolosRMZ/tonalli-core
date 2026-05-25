@@ -7,6 +7,9 @@ import {
 } from "../src/rmz/index.js";
 import type { BlockchainAdapter, TokenBalance } from "../src/adapters/index.js";
 
+const HOLDER_ADDRESS = "ecash:qzh3lwn68jtn94e8pf059rslfssyrjjyaykjwr0z2a";
+const NON_HOLDER_ADDRESS = "ecash:qzh3lwn68jtn94e8pf059rslfssyrjjyaykjwr0z2p";
+
 class MockAdapter implements BlockchainAdapter {
   async getTokenBalance(
     address: string,
@@ -16,7 +19,7 @@ class MockAdapter implements BlockchainAdapter {
       return null;
     }
 
-    if (address === "ecash:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz") {
+    if (address === HOLDER_ADDRESS) {
       return {
         tokenId,
         amount: "100"
@@ -37,60 +40,45 @@ describe("RMZ Access Key Module", () => {
   });
 
   it("gets RMZ balance for a holder", async () => {
-    const balance = await getRMZBalance(
-      "ecash:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz",
-      adapter
-    );
+    const balance = await getRMZBalance(HOLDER_ADDRESS, adapter);
 
     expect(balance).toBe(100n);
   });
 
   it("detects an RMZ holder", async () => {
-    const result = await hasRMZAccess(
-      "ecash:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz",
-      adapter
-    );
+    const result = await hasRMZAccess(HOLDER_ADDRESS, adapter);
 
     expect(result).toBe(true);
   });
 
   it("detects a non-holder", async () => {
-    const result = await hasRMZAccess(
-      "ecash:qzy0000000000000000000000000000000qzy000",
-      adapter
-    );
+    const result = await hasRMZAccess(NON_HOLDER_ADDRESS, adapter);
 
     expect(result).toBe(false);
   });
 
   it("returns correct holder status", async () => {
-    const status = await getRMZAccessStatus(
-      "ecash:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz",
-      adapter
-    );
+    const status = await getRMZAccessStatus(HOLDER_ADDRESS, adapter);
 
     expect(status).toBe("holder");
   });
 
   it("returns non-holder status", async () => {
-    const status = await getRMZAccessStatus(
-      "ecash:qzy0000000000000000000000000000000qzy000",
-      adapter
-    );
+    const status = await getRMZAccessStatus(NON_HOLDER_ADDRESS, adapter);
 
     expect(status).toBe("non-holder");
   });
 
   it("rejects invalid or ambiguous addresses securely", async () => {
     const result = await hasRMZAccess(
-      "bitcoincash:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz",
+      "bitcoincash:qzh3lwn68jtn94e8pf059rslfssyrjjyaykjwr0z2a",
       adapter
     );
 
     expect(result).toBe(false);
 
     const status = await getRMZAccessStatus(
-      "bitcoincash:qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq9yf6pz",
+      "bitcoincash:qzh3lwn68jtn94e8pf059rslfssyrjjyaykjwr0z2a",
       adapter
     );
 
