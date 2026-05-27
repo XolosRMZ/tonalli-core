@@ -10,7 +10,8 @@
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "test": "vitest run",
     "dev": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm test && npm run typecheck && npm run build"
   },
   "repository": {
     "type": "git",
@@ -37,5 +38,10 @@
     "tsx": "^4.22.3",
     "typescript": "^5.0.0",
     "vitest": "^3.0.0"
-  }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ]
 }
