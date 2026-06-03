@@ -10,6 +10,9 @@ const CASHADDR_GENERATORS = [
   0xae2eabe2a8n,
   0x1e4f43e470n
 ] as const;
+const CASHADDR_CHECKSUM_LENGTH = 8;
+const CASHADDR_HASH_SIZES = [20, 24, 28, 32, 40, 48, 56, 64] as const;
+const CASHADDR_ADDRESS_TYPES = new Set([0, 1]);
 
 export function requireEcashPrefix(address: string): string {
   const clean = address.trim();
@@ -73,11 +76,11 @@ export function isValidEcashAddress(address: string): boolean {
 
     const payloadValues = payloadToUint5Array(payload);
 
-    if (!payloadValues) {
+    if (!payloadValues || polymod([...prefixToUint5Array(prefix), ...payloadValues]) !== 1n) {
       return false;
     }
 
-    return polymod([...prefixToUint5Array(prefix), ...payloadValues]) === 1n;
+    return hasValidAddressPayload(payloadValues);
   } catch {
     return false;
   }
@@ -100,7 +103,7 @@ function prefixToUint5Array(prefix: string): number[] {
 }
 
 function payloadToUint5Array(payload: string): number[] | null {
-  if (payload.length < 8) {
+  if (payload.length <= CASHADDR_CHECKSUM_LENGTH) {
     return null;
   }
 
@@ -117,6 +120,58 @@ function payloadToUint5Array(payload: string): number[] | null {
   }
 
   return values;
+}
+
+function hasValidAddressPayload(payloadValues: number[]): boolean {
+  const dataValues = payloadValues.slice(0, -CASHADDR_CHECKSUM_LENGTH);
+  const bytes = convertBits(dataValues, 5, 8, false);
+
+  if (!bytes || bytes.length < 2) {
+    return false;
+  }
+
+  const [version, ...hash] = bytes;
+
+  if ((version & 0x80) !== 0) {
+    return false;
+  }
+
+  const addressType = (version >> 3) & 0x0f;
+  const hashSize = CASHADDR_HASH_SIZES[version & 0x07];
+
+  return CASHADDR_ADDRESS_TYPES.has(addressType) && hash.length === hashSize;
+}
+
+function convertBits(values: number[], fromBits: number, toBits: number, pad: boolean): number[] | null {
+  let accumulator = 0;
+  let bits = 0;
+  const maxValue = (1 << toBits) - 1;
+  const maxAccumulator = (1 << (fromBits + toBits - 1)) - 1;
+  const result: number[] = [];
+
+  for (const value of values) {
+    if (value < 0 || value >> fromBits !== 0) {
+      return null;
+    }
+
+    accumulator = ((accumulator << fromBits) | value) & maxAccumulator;
+    bits += fromBits;
+
+    while (bits >= toBits) {
+      bits -= toBits;
+      result.push((accumulator >> bits) & maxValue);
+    }
+  }
+
+  if (pad) {
+    if (bits > 0) {
+      result.push((accumulator << (toBits - bits)) & maxValue);
+    }
+  } else if (bits >= fromBits || ((accumulator << (toBits - bits)) & maxValue) !== 0) {
+    return null;
+  }
+
+  return result;
 }
 
 function polymod(values: number[]): bigint {
