@@ -44,5 +44,8 @@
     "dist",
     "README.md",
     "LICENSE"
-  ]
+  ],
+  "dependencies": {
+    "ecashaddrjs": "^2.0.0"
+  }
 }

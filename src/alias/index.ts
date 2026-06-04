@@ -2,6 +2,8 @@ const DEFAULT_ALIAS_ENDPOINT = "https://alias.etokens.cash";
 const ALIAS_SUFFIX = ".xec";
 const ALIAS_NAME_PATTERN = /^[a-z0-9]{1,21}$/;
 
+export * from "./builder.js";
+
 export type AliasResolution = {
   alias: string;
   address: string;
