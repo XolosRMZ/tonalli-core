@@ -18,3 +18,6 @@ export {
   getRMZAccessStatus,
   type RMZAccessStatus
 } from "./rmz/index.js";
+
+export * from "./alias/index.js";
+
