@@ -1,6 +1,6 @@
 {
   "name": "@xolosarmy/tonalli-core",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Sovereign eCash infrastructure primitives for xolosArmy Network.",
   "type": "module",
   "main": "dist/index.cjs",
@@ -42,10 +42,12 @@
   },
   "files": [
     "dist",
+    "docs",
     "README.md",
     "LICENSE"
   ],
   "dependencies": {
-    "ecashaddrjs": "^2.0.0"
+    "ecashaddrjs": "^2.0.0",
+    "zod": "^4.3.6"
   }
 }
