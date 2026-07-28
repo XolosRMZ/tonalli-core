@@ -32,9 +32,11 @@ A signed transaction requires an explicit approved human approval. A broadcast
 requires a signed transaction. A confirmation requires a broadcasted
 transaction with the same TXID.
 
-`signedTransaction.status = "not_implemented"` is the only signer state used
-while Tonalli Wallet transaction signing is unavailable. It contains no raw
-transaction and no transaction identifier.
+`signedTransaction.status = "not_attempted"` proves that policy or approval
+stopped the workflow before the signer boundary. `status = "not_implemented"`
+is reserved for a policy-approved path where Tonalli Wallet transaction signing
+does not yet exist. Neither state contains a raw transaction or transaction
+identifier.
 
 ## Wallet and x402 boundary
 

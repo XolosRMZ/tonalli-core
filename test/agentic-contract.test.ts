@@ -258,4 +258,51 @@ describe("Agentic workflow v1 sequencing", () => {
       }).success
     ).toBe(false);
   });
+
+  it("allows an explicit not-attempted signer after policy rejection", () => {
+    expect(
+      agenticWorkflowV1Schema.safeParse({
+        contractVersion: AGENTIC_CONTRACT_VERSION,
+        kind: "agentic_workflow",
+        intent,
+        policyDecision: decision("rejected"),
+        signedTransaction: {
+          contractVersion: AGENTIC_CONTRACT_VERSION,
+          kind: "signed_transaction",
+          status: "not_attempted",
+          intentId: intent.intentId
+        },
+        broadcast: {
+          contractVersion: AGENTIC_CONTRACT_VERSION,
+          kind: "broadcast",
+          status: "not_attempted",
+          intentId: intent.intentId
+        },
+        confirmation: {
+          contractVersion: AGENTIC_CONTRACT_VERSION,
+          kind: "confirmation",
+          status: "not_attempted",
+          intentId: intent.intentId
+        }
+      }).success
+    ).toBe(true);
+  });
+
+  it("rejects a not-implemented signer after policy rejection", () => {
+    expect(
+      agenticWorkflowV1Schema.safeParse({
+        contractVersion: AGENTIC_CONTRACT_VERSION,
+        kind: "agentic_workflow",
+        intent,
+        policyDecision: decision("rejected"),
+        signedTransaction: {
+          contractVersion: AGENTIC_CONTRACT_VERSION,
+          kind: "signed_transaction",
+          status: "not_implemented",
+          intentId: intent.intentId,
+          reason: "wallet_signing_not_implemented"
+        }
+      }).success
+    ).toBe(false);
+  });
 });

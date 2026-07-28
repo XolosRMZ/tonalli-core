@@ -172,6 +172,15 @@ export const humanApprovalV1Schema = z
     }
   });
 
+const signingNotAttemptedV1Schema = z
+  .object({
+    contractVersion,
+    kind: z.literal("signed_transaction"),
+    status: z.literal("not_attempted"),
+    intentId: identifier
+  })
+  .strict();
+
 const signingNotImplementedV1Schema = z
   .object({
     contractVersion,
@@ -196,6 +205,7 @@ const signedTransactionArtifactV1Schema = z
   .strict();
 
 export const signedTransactionV1Schema = z.discriminatedUnion("status", [
+  signingNotAttemptedV1Schema,
   signingNotImplementedV1Schema,
   signedTransactionArtifactV1Schema
 ]);
@@ -312,7 +322,12 @@ export const agenticWorkflowV1Schema = z
     }
 
     if (value.policyDecision?.decision === "rejected") {
-      if (value.walletApprovalRequest || value.humanApproval || value.signedTransaction) {
+      if (
+        value.walletApprovalRequest ||
+        value.humanApproval ||
+        (value.signedTransaction &&
+          value.signedTransaction.status !== "not_attempted")
+      ) {
         issue(["policyDecision", "decision"], "rejected policy decisions stop the workflow");
       }
       if (value.broadcast && value.broadcast.status !== "not_attempted") {
