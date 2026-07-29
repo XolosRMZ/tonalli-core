@@ -37,6 +37,9 @@ The goal is to build independent, open, verifiable infrastructure around eCash.
 
 See [`docs/agentic-contract-v1.md`](docs/agentic-contract-v1.md).
 
+Security Review Gate 1 is reproducible with Docker or Podman from an exact,
+clean commit. See [`docs/security-gate-1.md`](docs/security-gate-1.md).
+
 ## Usage
 
 ```ts
