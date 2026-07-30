@@ -29,6 +29,17 @@ The goal is to build independent, open, verifiable infrastructure around eCash.
 - `hasRMZAccess(address, adapter)` primitive for community gating
 - Infrastructure-agnostic (bring your own Chronik/Indexer adapter)
 
+### 3. Agentic Contract V1
+- Strict, versioned CAE decisions: `approved`, `rejected`, or `needs_human_approval`
+- Fail-closed runtime validation for intents and every execution stage
+- Display-safe Tonalli Wallet and x402-XEC approval handoff
+- Explicit separation of human approval, signing, broadcast, and confirmation
+
+See [`docs/agentic-contract-v1.md`](docs/agentic-contract-v1.md).
+
+Security Review Gate 1 is reproducible with Docker or Podman from an exact,
+clean commit. See [`docs/security-gate-1.md`](docs/security-gate-1.md).
+
 ## Usage
 
 ```ts

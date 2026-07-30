@@ -21,3 +21,4 @@ export {
 
 export * from "./alias/index.js";
 
+export * from "./agentic/index.js";
